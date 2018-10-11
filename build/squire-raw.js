@@ -1598,12 +1598,29 @@ var keyHandlers = {
         }
         // If at beginning of block, merge with previous
         else if ( rangeDoesStartAtBlockBoundary( range, root ) ) {
+            if (range.startOffset > 0) {
+                var clone = range.cloneRange();
+                clone.setStart(clone.startContainer, clone.startOffset - 1);
+                var contents = clone.cloneContents();
+ 
+                if (contents && contents.lastChild &&
+                    contents.lastChild.tagName == 'INPUT' &&
+                    contents.lastChild.type == 'checkbox') {
+                    range.setStart(range.startContainer, range.startOffset - 1);
+                    self.setSelection(range);
+                    setTimeout( function () { afterDelete( self ); }, 0 );
+                    return;
+                }
+            }
+
             event.preventDefault();
+
             var current = getStartBlockOfRange( range, root );
             var previous;
             if ( !current ) {
                 return;
             }
+
             // In case inline data has somehow got between blocks.
             fixContainer( current.parentNode, root );
             // Now get previous block
@@ -1647,6 +1664,16 @@ var keyHandlers = {
         // Otherwise, leave to browser but check afterwards whether it has
         // left behind an empty inline tag.
         else {
+            var clone = range.cloneRange();
+            clone.setStart(clone.startContainer, clone.startOffset - 1);
+            var contents = clone.cloneContents();
+
+            if (contents && contents.lastChild &&
+                contents.lastChild.tagName == 'INPUT' &&
+                contents.lastChild.type == 'checkbox') {
+                range.setStart(range.startContainer, range.startOffset - 1);
+            }
+
             self.setSelection( range );
             setTimeout( function () { afterDelete( self ); }, 0 );
         }
