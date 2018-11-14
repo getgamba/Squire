@@ -323,8 +323,10 @@ var keyHandlers = {
                 var contents = clone.cloneContents();
  
                 if (contents && contents.lastChild &&
-                    contents.lastChild.tagName == 'INPUT' &&
-                    contents.lastChild.type == 'checkbox') {
+                    (contents.lastChild.tagName == 'INPUT' &&
+                     contents.lastChild.type == 'checkbox' ||
+                     contents.lastChild.tagName == 'SPAN' &&
+                     contents.lastChild.contentEditable == 'false')) {
                     range.setStart(range.startContainer, range.startOffset - 1);
                     self.setSelection(range);
                     setTimeout( function () { afterDelete( self ); }, 0 );
@@ -388,8 +390,10 @@ var keyHandlers = {
             var contents = clone.cloneContents();
 
             if (contents && contents.lastChild &&
-                contents.lastChild.tagName == 'INPUT' &&
-                contents.lastChild.type == 'checkbox') {
+                (contents.lastChild.tagName == 'INPUT' &&
+                 contents.lastChild.type == 'checkbox' ||
+                 contents.lastChild.tagName == 'SPAN' &&
+                 contents.lastChild.contentEditable == 'false')) {
                 range.setStart(range.startContainer, range.startOffset - 1);
             }
 
