@@ -1757,7 +1757,8 @@ var keyHandlers = {
         var node, parent;
         self._removeZWS();
         // If no selection and at start of block
-        if ( range.collapsed && rangeDoesStartAtBlockBoundary( range, root ) ) {
+        // DISABLE USE OF increaseListLevel
+        if ( false && range.collapsed && rangeDoesStartAtBlockBoundary( range, root ) ) {
             node = getStartBlockOfRange( range, root );
             // Iterate through the block's parents
             while ( ( parent = node.parentNode ) ) {
