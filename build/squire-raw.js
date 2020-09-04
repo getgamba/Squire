@@ -1651,6 +1651,22 @@ var keyHandlers = {
         // Otherwise, leave to browser but check afterwards whether it has
         // left behind an empty inline tag.
         else {
+            // But first check if the cursor is just after an INPUT tag. If so,
+            // delete it ourselves, because the browser won't if it is not
+            // inline.
+            var _range = range.cloneRange();
+            _range.setStart(_range.startContainer, _range.startOffset - 1);
+            var _contens = _range.cloneContents();
+            var nodeBeforeCursor = _contens.lastChild;
+            if ( nodeBeforeCursor.nodeType === ELEMENT_NODE &&
+                 (nodeBeforeCursor.nodeName == 'INPUT' ||
+                  !nodeBeforeCursor.isContentEditable)) {
+                 event.preventDefault();
+                 range.setStart(range.startContainer, range.startOffset - 1);
+                 deleteContentsOfRange( range, root );
+                 afterDelete( self, range );
+                 return;
+            }
             self.setSelection( range );
             setTimeout( function () { afterDelete( self ); }, 0 );
         }
