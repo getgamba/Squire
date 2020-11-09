@@ -1571,6 +1571,13 @@ var keyHandlers = {
     // course doesn't reset so you end up in the correct state!
     enter: isIOS ? function ( self, event, range ) {
         self._saveRangeToBookmark( range );
+        var elms = self._root.getElementsByTagName('INPUT');
+        for (var i = 0; i < elms.length; i ++) {
+          // iOS特有のトリックによりHTMLがリセットされてしまうため、
+          // チェックボックスの状態をHTMLに反映させておく必要がある
+          if (elms[i].type == 'checkbox')
+            elms[i].checked ? elms[i].setAttribute('checked', true) : elms[i].removeAttribute('checked');
+        }
         var html = self._getHTML();
         var restoreAndDoEnter = function () {
             self.removeEventListener( 'keyup', restoreAndDoEnter );
